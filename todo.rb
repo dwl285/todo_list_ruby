@@ -6,6 +6,7 @@ module Menu
     an option from the list:
       1) Add
       2) Show
+      3) Write list to file
       Q) Quit the program\n"
   end
 
@@ -43,6 +44,15 @@ class List
     }
     print "\n"
   end
+
+  def write_to_file(filename)
+    File.new(filename, "w+")
+    File.open(filename, "w+") do |f|
+      all_tasks.each do |task|
+        f.puts(task.to_s)
+      end
+    end
+  end
 end
 
 class Task
@@ -50,6 +60,10 @@ class Task
 
   def initialize(description)
     @description = description
+  end
+
+  def to_s
+    description.to_s
   end
 end
 
@@ -68,6 +82,10 @@ if __FILE__ == $PROGRAM_NAME
       puts "Task added"
     when "2"
       my_list.show
+    when "3"
+      filename = prompt("What would you like the filename to be?")
+      my_list.write_to_file(filename)
+      puts "Todo list written to #{filename}"
     else
       puts "Sorry, I didn't understand"
     end
