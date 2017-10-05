@@ -4,9 +4,11 @@ module Menu
   def menu
     "Welcome to the todo List CLI. Choose
     an option from the list:
-      1) Add
-      2) Show
-      3) Write list to file
+      1) Add task
+      2) Delete a task
+      3) Show all tasks
+      4) Write list to file
+      5) Read list from file
       Q) Quit the program\n"
   end
 
@@ -37,10 +39,16 @@ class List
     all_tasks << task
   end
 
+  def delete(task_number)
+    all_tasks.delete_at(task_number-1)
+  end
+
   def show
+    i = 1
     puts "Here's the contents of the list:"
     all_tasks.each {|t|
-      puts t.description
+      puts "#{i}) #{t.description}"
+      i+=1
     }
     print "\n"
   end
@@ -53,6 +61,13 @@ class List
       end
     end
   end
+
+  def read_from_file(filename)
+    File.open(filename).each do |line|
+      all_tasks. << Task.new(line)
+    end
+  end
+
 end
 
 class Task
@@ -81,11 +96,20 @@ if __FILE__ == $PROGRAM_NAME
       my_list.add(Task.new(task))
       puts "Task added"
     when "2"
-      my_list.show
+      puts "Which tasks would you like to delete?"
+      task_number = prompt(my_list.show,"")
+      my_list.delete(task_number.to_i)
+      puts "Task deleted"
     when "3"
+      my_list.show
+    when "4"
       filename = prompt("What would you like the filename to be?")
       my_list.write_to_file(filename)
       puts "Todo list written to #{filename}"
+    when "5"
+      filename = prompt("What's the filename of the list you'd like to read?")
+      my_list.read_from_file(filename)
+      puts "Todo list created from #{filename}"
     else
       puts "Sorry, I didn't understand"
     end
