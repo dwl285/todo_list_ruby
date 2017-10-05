@@ -6,9 +6,10 @@ module Menu
     an option from the list:
       1) Add task
       2) Delete a task
-      3) Show all tasks
-      4) Write list to file
-      5) Read list from file
+      3) Update a task
+      4) Show all tasks
+      5) Write list to file
+      6) Read list from file
       Q) Quit the program\n"
   end
 
@@ -41,6 +42,10 @@ class List
 
   def delete(task_number)
     all_tasks.delete_at(task_number-1)
+  end
+
+  def update(task_number, task)
+    all_tasks[task_number-1] = task
   end
 
   def show
@@ -101,12 +106,18 @@ if __FILE__ == $PROGRAM_NAME
       my_list.delete(task_number.to_i)
       puts "Task deleted"
     when "3"
-      my_list.show
+      puts "Which tasks would you like to update?"
+      task_number = prompt(my_list.show,"").to_i
+      task = Task.new(prompt("What would you like to change it to?"))
+      my_list.update(task_number, task)
+      puts "Task updated"
     when "4"
+      my_list.show
+    when "5"
       filename = prompt("What would you like the filename to be?")
       my_list.write_to_file(filename)
       puts "Todo list written to #{filename}"
-    when "5"
+    when "6"
       filename = prompt("What's the filename of the list you'd like to read?")
       my_list.read_from_file(filename)
       puts "Todo list created from #{filename}"
